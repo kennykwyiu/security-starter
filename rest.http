@@ -1,6 +1,21 @@
+@password=060dc5bc-a2cd-4fa1-9895-dd3057c2e8e4
+
+###
 GET http://localhost:8080/api/greeting HTTP/1.1
-Authorization: Basic user dce1b187-a8e5-4e35-a341-d265d282c6b4
+Authorization: Basic user {{password}}
 
 ###
 POST http://localhost:8080/api/greeting?name=Kenny HTTP/1.1
-Authorization: Basic user 407768db-a524-45ee-89f7-cd2c27b0e0b7
+Authorization: Basic user {{password}}
+Content-Type: application/json
+
+{
+    "gender": "M",
+    "idNo": "123456"
+}
+
+###
+PUT http://localhost:8080/api/greeting/Kenny HTTP/1.1
+Authorization: Basic user {{password}}
+
+###
