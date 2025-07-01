@@ -1,0 +1,6 @@
+GET http://localhost:8080/api/greeting HTTP/1.1
+Authorization: Basic user dce1b187-a8e5-4e35-a341-d265d282c6b4
+
+###
+POST http://localhost:8080/api/greeting HTTP/1.1
+Authorization: Basic user dce1b187-a8e5-4e35-a341-d265d282c6b4
