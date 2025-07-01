@@ -15,6 +15,13 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: uaa
+  security:
+    user:
+      name: user
+      password: 123456
+      roles: USER,ADMIN
   messages:
     basename: messages
     encoding: UTF-8

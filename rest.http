@@ -1,4 +1,4 @@
-@password=0959223d6-7882-4f7c-b32c-a89a758a6831
+@password=123456
 
 ###
 GET http://localhost:8080/api/greeting HTTP/1.1
