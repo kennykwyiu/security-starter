@@ -16,8 +16,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(req -> req.anyRequest().authenticated())
-                .formLogin(form -> form.loginPage("/login").permitAll())
+                .authorizeRequests(req -> req
+                    .antMatchers("/error").permitAll()
+                    .anyRequest().authenticated())
+                .formLogin(form -> form
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/", true)
+                    .permitAll())
 //                .httpBasic(Customizer.withDefaults())
                 .csrf(Customizer.withDefaults())
                 .logout(logout -> logout.logoutUrl("/perform_logout"))
@@ -39,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/public/**")
+        web.ignoring().antMatchers("/public/**", "/error")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 }
