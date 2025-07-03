@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +14,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import java.util.Map;
 
 @Slf4j
 @EnableWebSecurity
@@ -28,10 +33,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/login")
                     .defaultSuccessUrl("/", true)
                     .successHandler(jsonLoginSuccessHandler())
+                        .failureHandler(jsonLoginFailureHandler())
                     .permitAll())
 //                .httpBasic(Customizer.withDefaults())
                 .csrf(Customizer.withDefaults())
-                .logout(logout -> logout.logoutUrl("/perform_logout"))
+                .logout(logout -> logout.logoutUrl("/perform_logout")
+                        .logoutSuccessHandler(jsonLogoutSuccessHandler()))
+
                 .rememberMe(rememberMe -> rememberMe.tokenValiditySeconds(30*24*3600).rememberMeCookieName("someKeyToRemember"));
     }
 
@@ -48,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
-    private AuthenticationFailureHandler jsonLogoutSuccessHandler() {
+    private AuthenticationFailureHandler jsonLoginFailureHandler() {
         return (request, response, e) -> {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
