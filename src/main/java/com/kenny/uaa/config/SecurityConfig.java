@@ -15,6 +15,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import org.springframework.security.crypto.password.MessageDigestPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -38,19 +40,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/error").permitAll()
                     .anyRequest().authenticated())
                 .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .csrf(Customizer.withDefaults());
+                .csrf(csrf -> csrf.ignoringAntMatchers("/api/**", "/error", "/admin/**", "/authorize/**"))
 
-//                .formLogin(form -> form
-//                    .loginPage("/login")
-//                    .defaultSuccessUrl("/", true)
-//                    .successHandler(jsonLoginSuccessHandler())
-//                        .failureHandler(jsonLoginFailureHandler())
-//                    .permitAll())
+                .formLogin(form -> form
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/", true)
+                    .successHandler(jsonLoginSuccessHandler())
+                        .failureHandler(jsonLoginFailureHandler())
+                    .permitAll())
 //                .httpBasic(Customizer.withDefaults())
-//                .logout(logout -> logout.logoutUrl("/perform_logout")
-//                        .logoutSuccessHandler(jsonLogoutSuccessHandler()))
+                .logout(logout -> logout.logoutUrl("/perform_logout")
+                        .logoutSuccessHandler(jsonLogoutSuccessHandler()))
 //
-//                .rememberMe(rememberMe -> rememberMe.tokenValiditySeconds(30*24*3600).rememberMeCookieName("someKeyToRemember"));
+                .rememberMe(rememberMe -> rememberMe.tokenValiditySeconds(30*24*3600).rememberMeCookieName("someKeyToRemember"));
     }
 
     private RestAuthenticationFilter restAuthenticationFilter() throws Exception {
@@ -58,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationSuccessHandler(jsonLoginSuccessHandler());
         filter.setAuthenticationFailureHandler(jsonLoginFailureHandler());
         filter.setAuthenticationManager(authenticationManager());
-        filter.setFilterProcessesUrl(" /authorize/login");
+        filter.setFilterProcessesUrl("/authorize/login");
         return filter;
     }
 
