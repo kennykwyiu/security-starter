@@ -35,6 +35,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe(rememberMe -> rememberMe.tokenValiditySeconds(30*24*3600).rememberMeCookieName("someKeyToRemember"));
     }
 
+    private static LogoutSuccessHandler jsonLogoutSuccessHandler() {
+        return (request, response, authentication) -> {
+            if (authentication != null && authentication.getDetails() != null) {
+                request.getSession().invalidate();
+            }
+            response.setStatus(HttpStatus.OK.value());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(new ObjectMapper().writeValueAsString(Map.of("msg", "Logout success!")));
+            log.debug("Logout success!");
+        };
+    }
+
+    private AuthenticationFailureHandler jsonLogoutSuccessHandler() {
+        return (request, response, e) -> {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
+            Map<String, String> errData = Map.of("title", "auth failed", "details", e.getMessage());
+            ObjectMapper objectMapper = new ObjectMapper();
+            response.getWriter().println(objectMapper.writeValueAsString(errData));
+        };
+    }
+
     private AuthenticationSuccessHandler jsonLoginSuccessHandler() {
         return (request, response, authentication) -> {
             ObjectMapper objectMapper = new ObjectMapper();
