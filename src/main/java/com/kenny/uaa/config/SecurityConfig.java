@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import java.util.Map;
@@ -31,21 +32,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests(req -> req
+                        .antMatchers("/authorize/**").permitAll()
+                        .antMatchers("/admin/**").hasRole("ADMIN")
+                        .antMatchers("/api/**").hasRole("USER")
                     .antMatchers("/error").permitAll()
                     .anyRequest().authenticated())
-                .addFilterAt()
-                .formLogin(form -> form
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/", true)
-                    .successHandler(jsonLoginSuccessHandler())
-                        .failureHandler(jsonLoginFailureHandler())
-                    .permitAll())
-//                .httpBasic(Customizer.withDefaults())
-                .csrf(Customizer.withDefaults())
-                .logout(logout -> logout.logoutUrl("/perform_logout")
-                        .logoutSuccessHandler(jsonLogoutSuccessHandler()))
+                .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .csrf(Customizer.withDefaults());
 
-                .rememberMe(rememberMe -> rememberMe.tokenValiditySeconds(30*24*3600).rememberMeCookieName("someKeyToRemember"));
+//                .formLogin(form -> form
+//                    .loginPage("/login")
+//                    .defaultSuccessUrl("/", true)
+//                    .successHandler(jsonLoginSuccessHandler())
+//                        .failureHandler(jsonLoginFailureHandler())
+//                    .permitAll())
+//                .httpBasic(Customizer.withDefaults())
+//                .logout(logout -> logout.logoutUrl("/perform_logout")
+//                        .logoutSuccessHandler(jsonLogoutSuccessHandler()))
+//
+//                .rememberMe(rememberMe -> rememberMe.tokenValiditySeconds(30*24*3600).rememberMeCookieName("someKeyToRemember"));
     }
 
     private RestAuthenticationFilter restAuthenticationFilter() throws Exception {
