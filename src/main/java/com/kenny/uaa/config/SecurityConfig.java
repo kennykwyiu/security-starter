@@ -1,6 +1,8 @@
 package com.kenny.uaa.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kenny.uaa.security.filter.RestAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -19,16 +21,19 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import java.util.Map;
-
+@RequiredArgsConstructor
 @Slf4j
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private final ObjectMapper objectMapper;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests(req -> req
                     .antMatchers("/error").permitAll()
                     .anyRequest().authenticated())
+                .addFilterAt()
                 .formLogin(form -> form
                     .loginPage("/login")
                     .defaultSuccessUrl("/", true)
@@ -41,6 +46,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .logoutSuccessHandler(jsonLogoutSuccessHandler()))
 
                 .rememberMe(rememberMe -> rememberMe.tokenValiditySeconds(30*24*3600).rememberMeCookieName("someKeyToRemember"));
+    }
+
+    private RestAuthenticationFilter restAuthenticationFilter() throws Exception {
+        RestAuthenticationFilter filter = new RestAuthenticationFilter(objectMapper);
+        filter.setAuthenticationSuccessHandler(jsonLoginSuccessHandler());
+        filter.setAuthenticationFailureHandler(jsonLoginFailureHandler());
+        filter.setAuthenticationManager(authenticationManager());
+        filter.setFilterProcessesUrl(" /authorize/login");
+        return filter;
     }
 
     private static LogoutSuccessHandler jsonLogoutSuccessHandler() {
