@@ -22,3 +22,11 @@ PUT http://localhost:8080/api/greeting/Kenny HTTP/1.1
 Authorization: Basic user {{password}}
 
 ###
+
+POST http://localhost:8080/authorize/login
+Content-Type: application/json
+
+{
+  "username" : "user",
+  "password" : "123456"
+}
