@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers("/authorize/**").permitAll()
                         .antMatchers("/admin/**").hasRole("ADMIN")
                         .antMatchers("/api/**").hasRole("USER")
-                    .antMatchers("/error").permitAll()
+//                    .antMatchers("/error").permitAll()
                     .anyRequest().authenticated())
                 .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf(csrf -> csrf.ignoringAntMatchers("/api/**", "/error", "/admin/**", "/authorize/**"))
