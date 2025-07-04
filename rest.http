@@ -34,7 +34,6 @@ Content-Type: application/json
 ###
 
 POST {{host}}/authorize/register
-Accept-Language: zh-CN
 Content-Type: application/json
 
 {

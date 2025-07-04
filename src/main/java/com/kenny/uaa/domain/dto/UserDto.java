@@ -1,5 +1,6 @@
 package com.kenny.uaa.domain.dto;
 
+import com.kenny.uaa.annotation.ValidEmail;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -22,7 +23,7 @@ public class UserDto implements Serializable {
     private String matchingPassword;
 
     @NotNull
-    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+    @ValidEmail
     private String email;
 
     @NotNull
