@@ -1,14 +1,14 @@
 @password=123456
 
 ###
-GET http://localhost:8080/api/greeting HTTP/1.1
+GET {{host}}/api/greeting HTTP/1.1
 
 ###
-GET http://localhost:8080/api/greeting HTTP/1.1
+GET {{host}}/api/greeting HTTP/1.1
 Authorization: Basic user {{password}}
 
 ###
-POST http://localhost:8080/api/greeting?name=Kenny HTTP/1.1
+POST {{host}}/api/greeting?name=Kenny HTTP/1.1
 Authorization: Basic user {{password}}
 Content-Type: application/json
 
@@ -18,15 +18,29 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:8080/api/greeting/Kenny HTTP/1.1
+PUT {{host}}/api/greeting/Kenny HTTP/1.1
 Authorization: Basic user {{password}}
 
 ###
 
-POST http://localhost:8080/authorize/login
+POST {{host}}/authorize/login
 Content-Type: application/json
 
 {
   "username" : "user",
   "password" : "123456"
+}
+
+###
+
+POST {{host}}/authorize/register
+Accept-Language: zh-CN
+Content-Type: application/json
+
+{
+  "name": "Peter",
+  "username": "PeterWong",
+  "password": "qwerty12345T!",
+  "matchingPassword": "12345678",
+  "email": "zs@local"
 }
