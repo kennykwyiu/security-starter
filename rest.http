@@ -39,7 +39,7 @@ Content-Type: application/json
 {
   "name": "Peter",
   "username": "PeterWong",
-  "password": "qwerty12345T!",
-  "matchingPassword": "12345678",
-  "email": "zs@local"
+  "password": "P@ssw0rd!",
+  "matchingPassword": "P@ssw0rd!1",
+  "email": "zs@local.com"
 }
