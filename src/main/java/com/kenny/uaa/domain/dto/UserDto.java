@@ -1,6 +1,7 @@
 package com.kenny.uaa.domain.dto;
 
 import com.kenny.uaa.annotation.ValidEmail;
+import com.kenny.uaa.annotation.ValidPassword;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -17,9 +18,11 @@ public class UserDto implements Serializable {
     private String username;
 
     @NotNull
+    @ValidPassword
     private String password;
 
     @NotNull
+    @ValidPassword
     private String matchingPassword;
 
     @NotNull
