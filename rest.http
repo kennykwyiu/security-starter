@@ -34,12 +34,14 @@ Content-Type: application/json
 ###
 
 POST {{host}}/authorize/register
+Accept-Language: zh-CN
 Content-Type: application/json
 
 {
-  "name": "Peter",
+  "name": "张三李四",
   "username": "PeterWong",
-  "password": "P@ssw0rd!",
+  "password": "P@ssw0rd!123456qwerty",
   "matchingPassword": "P@ssw0rd!1",
   "email": "zs@local.com"
 }
+
