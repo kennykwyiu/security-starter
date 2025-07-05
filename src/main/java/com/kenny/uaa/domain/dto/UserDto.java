@@ -1,5 +1,6 @@
 package com.kenny.uaa.domain.dto;
 
+import com.kenny.uaa.annotation.PasswordMatch;
 import com.kenny.uaa.annotation.ValidEmail;
 import com.kenny.uaa.annotation.ValidPassword;
 import lombok.Data;
@@ -10,6 +11,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
+@PasswordMatch
 @Data
 public class UserDto implements Serializable {
     @NotNull
@@ -22,7 +24,6 @@ public class UserDto implements Serializable {
     private String password;
 
     @NotNull
-    @ValidPassword
     private String matchingPassword;
 
     @NotNull
