@@ -1,12 +1,20 @@
 package com.kenny.uaa.validation;
 
 import com.kenny.uaa.annotation.ValidPassword;
+import lombok.RequiredArgsConstructor;
 import org.passay.*;
+import org.passay.spring.SpringMessageResolver;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
+
+    private final SpringMessageResolver messageResolver;
 
     @Override
     public void initialize(ValidPassword constraintAnnotation) {
@@ -14,7 +22,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext constraintValidatorContext) {
-        PasswordValidator validator = new PasswordValidator(Arrays.asList(
+        PasswordValidator validator = new PasswordValidator(messageResolver, Arrays.asList(
                 new LengthRule(8, 30),
                 new CharacterRule(EnglishCharacterData.UpperCase, 1),
                 new CharacterRule(EnglishCharacterData.LowerCase, 1),
@@ -30,8 +38,14 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
             return true;
         }
         constraintValidatorContext.disableDefaultConstraintViolation();
-        constraintValidatorContext.buildConstraintViolationWithTemplate(String.join(",", validator.getMessages(result)))
-                .addConstraintViolation();
+        List<String> messages = validator.getMessages(result);
+        // Remove duplicate messages while preserving order
+        String message = messages.stream()
+            .distinct()
+            .collect(Collectors.joining("\n"));
+        constraintValidatorContext.buildConstraintViolationWithTemplate(message)
+            .addConstraintViolation();
         return false;
+//        return result.isValid();
     }
 }
