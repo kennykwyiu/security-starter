@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
@@ -14,6 +16,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.MessageDigestPasswordEncoder;
@@ -22,17 +26,27 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @EnableWebSecurity
+@Import(SecurityProblemSupport.class)
+@Order(99)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
+    private final SecurityProblemSupport securityProblemSupport;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .requestMatchers(req -> req.mvcMatchers("/authorize/**", "/admin/**","/api/**"))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(securityProblemSupport)
+                        .accessDeniedHandler(securityProblemSupport)
+                )
                 .authorizeRequests(req -> req
                         .antMatchers("/authorize/**").permitAll()
                         .antMatchers("/admin/**").hasRole("ADMIN")
@@ -40,19 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                    .antMatchers("/error").permitAll()
                     .anyRequest().authenticated())
                 .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .csrf(csrf -> csrf.ignoringAntMatchers("/api/**", "/error", "/admin/**", "/authorize/**"))
+                .csrf(AbstractHttpConfigurer::disable)
 
-                .formLogin(form -> form
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/", true)
-                    .successHandler(jsonLoginSuccessHandler())
-                        .failureHandler(jsonLoginFailureHandler())
-                    .permitAll())
-//                .httpBasic(Customizer.withDefaults())
-                .logout(logout -> logout.logoutUrl("/perform_logout")
-                        .logoutSuccessHandler(jsonLogoutSuccessHandler()))
-//
-                .rememberMe(rememberMe -> rememberMe.tokenValiditySeconds(30*24*3600).rememberMeCookieName("someKeyToRemember"));
+                ;
     }
 
     private RestAuthenticationFilter restAuthenticationFilter() throws Exception {
@@ -121,7 +125,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/public/**", "/error")
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+        web.ignoring().antMatchers("/public/**", "/error");
     }
 }
