@@ -19,9 +19,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <bootstrap.version>4.5.0</bootstrap.version>
         <passay.version>1.6.0</passay.version>
+        <problem.version>0.26.1</problem.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>problem-spring-web</artifactId>
+            <version>${problem.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
