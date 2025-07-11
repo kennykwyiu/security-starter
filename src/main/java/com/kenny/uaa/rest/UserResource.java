@@ -1,6 +1,8 @@
 package com.kenny.uaa.rest;
 
 import lombok.Data;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +22,11 @@ public class UserResource {
     @PutMapping("/greeting/{name}")
     public String putGreeting(@PathVariable String name) {
         return "Hello " + name + "!";
+    }
+
+    @GetMapping("/principal")
+    public Authentication getPrincipal() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
     @Data
