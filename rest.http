@@ -45,3 +45,6 @@ Content-Type: application/json
   "email": "zs@local.com"
 }
 
+###
+GET {{host}}/api/principal HTTP/1.1
+Authorization: Basic user {{password}}
