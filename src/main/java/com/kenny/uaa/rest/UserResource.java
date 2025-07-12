@@ -5,6 +5,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api")
 public class UserResource {
@@ -25,8 +27,13 @@ public class UserResource {
     }
 
     @GetMapping("/principal")
-    public Authentication getPrincipal() {
-        return SecurityContextHolder.getContext().getAuthentication();
+    public Principal getPrincipal(Principal principal) {
+        return principal;
+    }
+
+    @GetMapping("/authentication")
+    public Authentication getPrincipal(Authentication authentication) {
+        return authentication;
     }
 
     @Data
