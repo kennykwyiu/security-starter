@@ -28,6 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
+import javax.sql.DataSource;
 import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
@@ -37,6 +38,7 @@ import java.util.Map;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
     private final SecurityProblemSupport securityProblemSupport;
+    private final DataSource dataSource;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -103,7 +105,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
+        auth.jdbcAuthentication()
+                .withDefaultSchema()
+                .dataSource(dataSource)
+                .passwordEncoder(passwordEncoder())
                 .withUser("user")
                 .password("{bcrypt}$2a$10$ROWbh4QyuvE.hr3xKWnW6uzrYWjqq.GX7c8YrlqcAYIweyCopnMN2")
                 .roles("USER","ADMIN")
@@ -125,6 +130,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/public/**", "/error");
+        web.ignoring().antMatchers("/public/**", "/error", "/h2-console/**");
     }
 }
