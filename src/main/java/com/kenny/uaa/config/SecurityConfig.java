@@ -106,16 +106,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
-                .withDefaultSchema()
                 .dataSource(dataSource)
-                .passwordEncoder(passwordEncoder())
-                .withUser("user")
-                .password("{bcrypt}$2a$10$ROWbh4QyuvE.hr3xKWnW6uzrYWjqq.GX7c8YrlqcAYIweyCopnMN2")
-                .roles("USER","ADMIN")
-                .and()
-                .withUser("mary")
-                .password("{SHA-1}{JHbzcU2gPQAmIrdOIj1bHTQ20jpYMzITRjrnDCnM6mo=}9349861ebe589ad9b330aeab2adbb9eed3e175bb")
-                .roles("USER");
+                .passwordEncoder(passwordEncoder());
     }
 
     @Bean
