@@ -40,7 +40,7 @@ Content-Type: application/json
 {
   "name": "张三李四",
   "username": "PeterWong",
-  "password": "P@ssw0rd!123456qwerty",
+  "password": "P@ssw0rd!1",
   "matchingPassword": "P@ssw0rd!1",
   "email": "zs@local.com"
 }
