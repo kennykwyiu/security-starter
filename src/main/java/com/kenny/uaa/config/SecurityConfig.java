@@ -2,6 +2,7 @@ package com.kenny.uaa.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kenny.uaa.security.filter.RestAuthenticationFilter;
+import com.kenny.uaa.security.userdetails.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -18,6 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.MessageDigestPasswordEncoder;
@@ -38,7 +40,7 @@ import java.util.Map;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
     private final SecurityProblemSupport securityProblemSupport;
-    private final DataSource dataSource;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -105,10 +107,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery("select username, password, enabled from mooc_users where username = ?")
-                .authoritiesByUsernameQuery("select username, authority from mooc_authorities where username = ?")
+        auth
+                .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
 
