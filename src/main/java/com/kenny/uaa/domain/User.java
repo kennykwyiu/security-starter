@@ -1,5 +1,6 @@
 package com.kenny.uaa.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -21,6 +22,7 @@ public class User implements UserDetails, Serializable {
     private Long id;
     @Column(length = 80, unique = true, nullable = false)
     private String username;
+    @JsonIgnore
     @Column(name = "password_hash", length = 100, nullable = false)
     private String password;
     @Column(length = 11, unique = true, nullable = false)
