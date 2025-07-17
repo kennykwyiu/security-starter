@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql@sha256:297f5ead7043a440ce84b3b0f3b77430a4f233c2578ff15fff8f0de54f67f22d
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: security
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
+      TZ: Asia/Hong_Kong
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    command: 
+      - --default-authentication-plugin=mysql_native_password
+      - --lower_case_table_names=1
+      - --skip-ssl
+      - --character_set_server=utf8mb4
+      - --explicit_defaults_for_timestamp
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
