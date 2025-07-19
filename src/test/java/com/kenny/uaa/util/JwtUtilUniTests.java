@@ -38,7 +38,7 @@ public class JwtUtilUniTests {
                 .authorities(authorities)
                 .build();
 
-        String token = jwtUtil.createJWT(user);
+        String token = jwtUtil.createAccessToken(user);
 
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtUtil.key)
