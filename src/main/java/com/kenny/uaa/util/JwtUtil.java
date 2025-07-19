@@ -14,7 +14,17 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtil {
     public static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-    public String createJWT(UserDetails userDetails) {
+    public static final Key refreshKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+
+    public String createAccessToken(UserDetails userDetails) {
+        return createJwtToken(userDetails, key);
+    }
+
+    public String createRefreshToken(UserDetails userDetails) {
+        return createJwtToken(userDetails, refreshKey);
+    }
+
+    public String createJwtToken(UserDetails userDetails, Key key) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
                 .setId("kenny")
