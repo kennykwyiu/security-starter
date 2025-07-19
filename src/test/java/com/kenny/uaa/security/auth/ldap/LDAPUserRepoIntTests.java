@@ -25,4 +25,10 @@ public class LDAPUserRepoIntTests {
         assertTrue(oUser.isPresent());
     }
 
+    @Test
+    public void givenUsernameAndWrongPassword_ThenFindUserFail() {
+        String username = "kenny";
+        Optional<LDAPUser> oUser = userRepo.findByUsernameAndPassword(username, "bad_password");
+        assertTrue(oUser.isEmpty());
+    }
 }
