@@ -9,7 +9,7 @@ objectClass: organizationalPerson
 objectClass: inetOrgPerson
 cn: ken li
 sn: li
-uid: kennyli
+uid: kenny
 userPassword: 123456
 
 dn: uid=mike,dc=kenny,dc=com
