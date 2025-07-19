@@ -1,6 +1,7 @@
 package com.kenny.uaa.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kenny.uaa.security.auth.ldap.LDAPMultiAuthenticationProvider;
 import com.kenny.uaa.security.filter.RestAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,6 +27,8 @@ import java.util.Map;
 @Order(100)
 public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
+    private final DaoAuthenticationProvider authenticationProvider;
+    private final LDAPMultiAuthenticationProvider ldapAuthenticationProvider;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -87,4 +92,9 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(ldapAuthenticationProvider);
+        auth.authenticationProvider(authenticationProvider);
+    }
 }
