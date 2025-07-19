@@ -1,6 +1,7 @@
 package com.kenny.uaa.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
