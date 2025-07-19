@@ -1,4 +1,4 @@
-/*DROP TABLE IF EXISTS mooc_users;
+DROP TABLE IF EXISTS mooc_users;
 CREATE TABLE mooc_users
 (
     username VARCHAR(50)  NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE mooc_authorities
             REFERENCES mooc_users (username)
 ) ENGINE=InnoDB;
 
-CREATE UNIQUE INDEX ix_auth_username on mooc_authorities (username, authority);*/
+CREATE UNIQUE INDEX ix_auth_username on mooc_authorities (username, authority);
 
 
 CREATE TABLE IF NOT EXISTS mooc_roles (
