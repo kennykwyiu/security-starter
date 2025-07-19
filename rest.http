@@ -48,6 +48,9 @@ Content-Type: application/json
 ###
 GET {{host}}/api/principal HTTP/1.1
 Authorization: Basic user {{password}}
+###
+GET {{host}}/api/principal HTTP/1.1
+Authorization: Basic kenny {{password}}
 
 ###
 GET {{host}}/api/authentication HTTP/1.1
