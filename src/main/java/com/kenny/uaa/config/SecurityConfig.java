@@ -1,5 +1,7 @@
 package com.kenny.uaa.config;
 
+import com.kenny.uaa.security.auth.ldap.LDAPMultiAuthenticationProvider;
+import com.kenny.uaa.security.auth.ldap.LDAPUserRepo;
 import com.kenny.uaa.security.userdetails.UserDetailsPasswordServiceImpl;
 import com.kenny.uaa.security.userdetails.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final SecurityProblemSupport securityProblemSupport;
     private final UserDetailsServiceImpl userDetailsService;
     private final UserDetailsPasswordServiceImpl userDetailsPasswordService;
+    private final LDAPUserRepo ldapUserRepo;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -56,10 +59,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder())
-                .userDetailsPasswordManager(userDetailsPasswordService);
+        auth.authenticationProvider(ldapMultiAuthenticationProvider());
+        auth.authenticationProvider(authenticationProvider());
+
+    }
+
+    @Bean
+    LDAPMultiAuthenticationProvider ldapMultiAuthenticationProvider() {
+        return new LDAPMultiAuthenticationProvider(ldapUserRepo);
+    }
+
+    @Bean
+    DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsPasswordService(userDetailsPasswordService);
+        return daoAuthenticationProvider;
     }
 
     @Bean
