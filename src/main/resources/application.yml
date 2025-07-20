@@ -21,3 +21,7 @@ spring:
   profiles:
     active: ${SPRING_ACTIVE_PROFILE:dev}
 
+kenny:
+  jwt:
+    access-token-expire-time: 300000
+    refresh-token-expire-time: 2592000000
