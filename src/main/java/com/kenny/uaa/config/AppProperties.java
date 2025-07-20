@@ -1,0 +1,22 @@
+package com.kenny.uaa.config;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ConfigurationProperties(prefix = "kenny")
+public class AppProperties {
+
+    @Getter
+    @Setter
+    private Jwt jwt = new Jwt();
+
+    @Getter
+    @Setter
+    public static class Jwt {
+        private Long accessTokenExpireTime = 60_000L;
+        private Long refreshTokenExpireTime = 30 * 24 * 3600 * 1000L;
+    }
+}
