@@ -1,5 +1,6 @@
 package com.kenny.uaa.util;
 
+import com.kenny.uaa.config.AppProperties;
 import com.kenny.uaa.domain.Role;
 import com.kenny.uaa.domain.User;
 import io.jsonwebtoken.Claims;
@@ -19,7 +20,7 @@ public class JwtUtilUniTests {
 
     @BeforeEach
     public void setUp() {
-        jwtUtil = new JwtUtil();
+        jwtUtil = new JwtUtil(new AppProperties());
     }
 
     @Test
