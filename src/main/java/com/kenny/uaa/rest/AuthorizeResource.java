@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.nio.file.AccessDeniedException;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,7 +24,7 @@ public class AuthorizeResource {
     }
 
     @PostMapping("/token")
-    public Auth login(@Valid @RequestBody LoginDto loginDto) throws Exception {
+    public Auth login(@Valid @RequestBody LoginDto loginDto) throws AccessDeniedException {
         return userService.login(loginDto.getUsername(), loginDto.getPassword());
     }
 
@@ -33,7 +34,8 @@ public class AuthorizeResource {
         String PREFIX = "Bearer ";
         String accessToken = authorization.replace(PREFIX, "");
         if (jwtUtil.validateRefreshToken(refreshToken) && jwtUtil.validateAccessTokenWithoutExpiration(accessToken)) {
-
+            return new Auth(jwtUtil.createAccessTokenWithRefreshToken(refreshToken), refreshToken);
         }
+        throw new AccessDeniedException("Access Denied");
     }
 }
