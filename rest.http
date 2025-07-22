@@ -50,7 +50,7 @@ GET {{host}}/api/principal HTTP/1.1
 Authorization: Basic user {{password}}
 ###
 GET {{host}}/api/principal HTTP/1.1
-Authorization: Basic kenny {{password}}
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJrZW5ueSIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iLCJST0xFX1VTRVIiXSwic3ViIjoidXNlciIsImlhdCI6MTc1MzExMjU3MSwiZXhwIjoxNzUzMTEyODcxfQ.tTOI1czl60lvBzydkdyDAMuXMI8fhgNDZZh4z4SaNn3QzdvJcYRGeIPDgAH7YJNcWs_-oDN0Umcra1XFbXa7kA
 
 ###
 GET {{host}}/api/authentication HTTP/1.1
