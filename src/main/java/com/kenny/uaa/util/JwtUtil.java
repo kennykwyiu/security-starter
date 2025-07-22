@@ -33,6 +33,18 @@ public class JwtUtil {
                 refreshKey);
     }
 
+    public boolean validateAccessToken(String token) {
+        return validateToken(token, key);
+    }
+
+    public boolean validateRefreshToken(String token) {
+        return validateToken(token, refreshKey);
+    }
+
+    public boolean validateToken(String token, Key key) {
+
+    }
+
     public String createJwtToken(UserDetails userDetails, long timeToExpire, Key key) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
