@@ -4,11 +4,9 @@ import com.kenny.uaa.domain.Auth;
 import com.kenny.uaa.domain.dto.LoginDto;
 import com.kenny.uaa.domain.dto.UserDto;
 import com.kenny.uaa.service.UserService;
+import com.kenny.uaa.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -17,6 +15,7 @@ import javax.validation.Valid;
 @RequestMapping("/authorize")
 public class AuthorizeResource {
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public UserDto register(@Valid @RequestBody UserDto userDto) {
@@ -26,5 +25,15 @@ public class AuthorizeResource {
     @PostMapping("/token")
     public Auth login(@Valid @RequestBody LoginDto loginDto) throws Exception {
         return userService.login(loginDto.getUsername(), loginDto.getPassword());
+    }
+
+    @PostMapping("/token/refresh")
+    public Auth refreshToken(@RequestHeader(name = "Authorization") String authorization,
+                             @RequestParam String refreshToken) throws Exception {
+        String PREFIX = "Bearer ";
+        String accessToken = authorization.replace(PREFIX, "");
+        if (jwtUtil.validateRefreshToken(refreshToken) && jwtUtil.validateAccessTokenWithoutExpiration(accessToken)) {
+
+        }
     }
 }
