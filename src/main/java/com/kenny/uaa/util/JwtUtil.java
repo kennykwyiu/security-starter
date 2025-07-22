@@ -5,12 +5,14 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -31,6 +33,28 @@ public class JwtUtil {
         return createJwtToken(userDetails,
                 appProperties.getJwt().getRefreshTokenExpireTime(),
                 refreshKey);
+    }
+
+    public String createAccessTokenWithRefreshToken(String refreshToken) {
+        return parseClaims(refreshToken, refreshKey)
+                .map(claims -> Jwts.builder()
+                                .setClaims(claims)
+                                .setExpiration(new Date(System.currentTimeMillis() + appProperties.getJwt().getAccessTokenExpireTime()))
+                                .setIssuedAt(new Date())
+                                .signWith(key, SignatureAlgorithm.HS512)
+                                .compact()
+                        )
+                .orElseThrow(()-> new AccessDeniedException("Access Denied"));
+    }
+
+    private Optional<Claims> parseClaims(String token, Key key) {
+        try {
+            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+            return Optional.of(claims);
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException |
+                 IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 
     /*
