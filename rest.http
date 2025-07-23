@@ -50,17 +50,41 @@ GET {{host}}/api/principal HTTP/1.1
 Authorization: Basic user {{password}}
 ###
 GET {{host}}/api/principal HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJrZW5ueSIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iLCJST0xFX1VTRVIiXSwic3ViIjoidXNlciIsImlhdCI6MTc1MzExMjU3MSwiZXhwIjoxNzUzMTEyODcxfQ.tTOI1czl60lvBzydkdyDAMuXMI8fhgNDZZh4z4SaNn3QzdvJcYRGeIPDgAH7YJNcWs_-oDN0Umcra1XFbXa7kA
+Authorization: Bearer {{accessToken}}
 
 ###
 GET {{host}}/api/authentication HTTP/1.1
 Authorization: Basic user {{password}}
 
 ###
+# @name userLogin
 POST {{host}}/authorize/token HTTP/1.1
 Content-Type: application/json
 
 {
   "username": "user",
   "password": "123456"
+}
+
+###
+
+@accessToken={{userLogin.response.body.accessToken}}
+@refreshToken={{userLogin.response.body.refreshToken}}
+
+###
+
+POST {{host}}/authorize/token/refresh?refreshToken={{refreshToken}}
+Authorization: Bearer {{accessToken}}
+
+###
+POST {{host}}/authorize/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "wangwu1",
+  "name": "王五",
+  "email": "wangwu@local.dev",
+  "mobile": "13912341232",
+  "password": "Abcd123$",
+  "matchingPassword": "Abcd123$"
 }
