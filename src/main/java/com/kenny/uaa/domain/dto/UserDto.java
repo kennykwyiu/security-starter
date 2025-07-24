@@ -4,7 +4,10 @@ import com.kenny.uaa.annotation.PasswordMatch;
 import com.kenny.uaa.annotation.ValidEmail;
 import com.kenny.uaa.annotation.ValidPassword;
 import com.kenny.uaa.config.Constants;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,6 +17,9 @@ import java.io.Serializable;
 
 @PasswordMatch
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDto implements Serializable {
     @NotNull
     @NotBlank
