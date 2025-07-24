@@ -50,7 +50,7 @@ public class UserService {
                 .map(role -> {
                     User userToSave = user.withAuthorities(Set.of(role))
                             .withPassword(passwordEncoder.encode(user.getPassword()));
-                    return userToSave;
+                    return userRepo.save(userToSave);
                 })
                 .orElseThrow();
     }
