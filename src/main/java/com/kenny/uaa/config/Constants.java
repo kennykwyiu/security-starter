@@ -18,4 +18,5 @@ public class Constants {
 
      */
     public static final String PATTERN_MOBILE = "^(\\+852)?[569]\\d{7}$";
+    public static final String ROLE_USER = "ROLE_USER";
 }
