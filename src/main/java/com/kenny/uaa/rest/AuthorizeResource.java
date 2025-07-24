@@ -3,6 +3,7 @@ package com.kenny.uaa.rest;
 import com.kenny.uaa.domain.Auth;
 import com.kenny.uaa.domain.dto.LoginDto;
 import com.kenny.uaa.domain.dto.UserDto;
+import com.kenny.uaa.exception.DuplicateProblem;
 import com.kenny.uaa.service.UserService;
 import com.kenny.uaa.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,17 @@ public class AuthorizeResource {
 
     @PostMapping("/register")
     public UserDto register(@Valid @RequestBody UserDto userDto) {
+        if (userService.isUsernameExist(userDto.getUsername())) {
+            throw new DuplicateProblem("Username is already in use");
+        }
+
+        if (userService.isEmailExist(userDto.getEmail())) {
+            throw new DuplicateProblem("Email is already in use");
+        }
+
+        if (userService.isMobileExist(userDto.getMobile())) {
+            throw new DuplicateProblem("Mobile number is already in use");
+        }
         return userDto;
     }
 
