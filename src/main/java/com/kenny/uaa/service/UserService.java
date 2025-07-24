@@ -25,4 +25,16 @@ public class UserService {
                 )
                 .orElseThrow(() -> new BadCredentialsException("Username or password is incorrect"));
     }
+
+    public boolean isUsernameExist(String username) {
+        return userRepo.countByUsername(username) > 0;
+    }
+
+    public boolean isEmailExist(String email) {
+        return userRepo.countByEmail(email) > 0;
+    }
+
+    public boolean isMobileExist(String mobile) {
+        return userRepo.countByMobile(mobile) > 0;
+    }
 }
