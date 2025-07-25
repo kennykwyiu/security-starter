@@ -81,10 +81,10 @@ POST {{host}}/authorize/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "username": "wangwu1",
-  "name": "王五",
-  "email": "wangwu@local.dev",
-  "mobile": "13912341232",
+  "username": "steven",
+  "name": "steven",
+  "email": "steven@local.dev",
+  "mobile": "92345678",
   "password": "Abcd123$",
   "matchingPassword": "Abcd123$"
 }
