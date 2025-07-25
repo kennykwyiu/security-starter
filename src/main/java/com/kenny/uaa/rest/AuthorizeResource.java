@@ -1,12 +1,14 @@
 package com.kenny.uaa.rest;
 
 import com.kenny.uaa.domain.Auth;
+import com.kenny.uaa.domain.User;
 import com.kenny.uaa.domain.dto.LoginDto;
 import com.kenny.uaa.domain.dto.UserDto;
 import com.kenny.uaa.exception.DuplicateProblem;
 import com.kenny.uaa.service.UserService;
 import com.kenny.uaa.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,7 +34,20 @@ public class AuthorizeResource {
         if (userService.isMobileExist(userDto.getMobile())) {
             throw new DuplicateProblem("Mobile number is already in use");
         }
-        return userDto;
+        val user = User.builder()
+                .username(userDto.getUsername())
+                .name(userDto.getName())
+                .email(userDto.getEmail())
+                .mobile(userDto.getMobile())
+                .password(userDto.getPassword())
+                .build();
+        User savedUser = userService.register(user);
+        return UserDto.builder()
+                .username(savedUser.getUsername())
+                .name(savedUser.getName())
+                .email(savedUser.getEmail())
+                .mobile(savedUser.getMobile())
+                .build();
     }
 
     @PostMapping("/token")
