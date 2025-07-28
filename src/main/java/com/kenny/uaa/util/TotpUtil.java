@@ -43,11 +43,16 @@ public class TotpUtil {
         return code.equals(createTotp(key, now));
     }
 
-    public Key getTotpKey() throws NoSuchAlgorithmException {
+    private Key generateKey() {
         return keyGenerator.generateKey();
     }
 
-    public String encodeKeyToString(Key key) {
+    private String encodeKeyToString(Key key) {
         return Base64.getEncoder().encodeToString(key.getEncoded());
     }
+
+    public String encodeKeyToString() {
+        return encodeKeyToString(generateKey());
+    }
+
 }
