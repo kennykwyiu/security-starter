@@ -6,8 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.KeyGenerator;
+import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
+import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
@@ -26,5 +29,11 @@ public class TotpUtil {
         } catch (NoSuchAlgorithmException e) {
             log.error("Algorithm not found: {}", e.getLocalizedMessage());
         }
+    }
+
+    public String createTotp(Key key, Instant time) throws InvalidKeyException {
+        int password = totp.generateOneTimePassword(key, time);
+        String format = "%0" + PASSWORD_LENGTH + "d";
+        return String.format(format, password);
     }
 }
