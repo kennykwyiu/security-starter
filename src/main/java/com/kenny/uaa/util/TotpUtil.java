@@ -36,4 +36,9 @@ public class TotpUtil {
         String format = "%0" + PASSWORD_LENGTH + "d";
         return String.format(format, password);
     }
+
+    public boolean verifyTotp(Key key, String code) throws InvalidKeyException {
+        Instant now = Instant.now();
+        return code.equals(createTotp(key, now));
+    }
 }
