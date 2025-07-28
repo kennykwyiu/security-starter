@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.KeyGenerator;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -55,4 +56,7 @@ public class TotpUtil {
         return encodeKeyToString(generateKey());
     }
 
+    public Key decodeKeyFromString(String encodedKey) {
+        return new SecretKeySpec(Base64.getDecoder().decode(encodedKey), totp.getAlgorithm());
+    }
 }
