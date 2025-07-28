@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -37,6 +38,14 @@ public class TotpUtil {
         int password = totp.generateOneTimePassword(key, time);
         String format = "%0" + PASSWORD_LENGTH + "d";
         return String.format(format, password);
+    }
+
+    public Optional<String> createTotp(String strKey) {
+        try {
+            return Optional.of(createTotp(decodeKeyFromString(strKey), Instant.now()));
+        } catch (InvalidKeyException e) {
+            return Optional.empty();
+        }
     }
 
     public boolean verifyTotp(Key key, String code) throws InvalidKeyException {
