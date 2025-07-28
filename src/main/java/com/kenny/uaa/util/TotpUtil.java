@@ -53,11 +53,11 @@ public class TotpUtil {
         return code.equals(createTotp(key, now));
     }
 
-    private Key generateKey() {
+    public Key generateKey() {
         return keyGenerator.generateKey();
     }
 
-    private String encodeKeyToString(Key key) {
+    public String encodeKeyToString(Key key) {
         return Base64.getEncoder().encodeToString(key.getEncoded());
     }
 
