@@ -11,6 +11,7 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
@@ -44,5 +45,9 @@ public class TotpUtil {
 
     public Key getTotpKey() throws NoSuchAlgorithmException {
         return keyGenerator.generateKey();
+    }
+
+    public String encodeKeyToString(Key key) {
+        return Base64.getEncoder().encodeToString(key.getEncoded());
     }
 }
