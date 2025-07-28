@@ -41,4 +41,8 @@ public class TotpUtil {
         Instant now = Instant.now();
         return code.equals(createTotp(key, now));
     }
+
+    public Key getTotpKey() throws NoSuchAlgorithmException {
+        return keyGenerator.generateKey();
+    }
 }
