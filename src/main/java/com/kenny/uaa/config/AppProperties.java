@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import javax.validation.Valid;
+
 @Configuration
 @ConfigurationProperties(prefix = "kenny")
 public class AppProperties {
@@ -20,5 +22,17 @@ public class AppProperties {
         private String prefix = "Bearer ";
         private Long accessTokenExpireTime = 60_000L;
         private Long refreshTokenExpireTime = 30 * 24 * 3600 * 1000L;
+    }
+
+    @Getter
+    @Setter
+    @Valid
+    private SmsProvider smsProvider = new SmsProvider();
+
+    @Getter
+    @Setter
+    public static class SmsProvider {
+        private String name;
+        private String apiUrl;
     }
 }
