@@ -35,4 +35,18 @@ public class AppProperties {
         private String name;
         private String apiUrl;
     }
+
+    @Getter
+    @Setter
+    @Valid
+    private LeanCloud leanCloud = new LeanCloud();
+
+    @Getter
+    @Setter
+    public static class LeanCloud {
+
+        private String name;
+        private String appId;
+        private String appKey;
+    }
 }
