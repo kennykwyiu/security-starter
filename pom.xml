@@ -24,6 +24,7 @@
         <otp.version>0.2.0</otp.version>
         <redisson.version>3.12.5</redisson.version>
         <embedded.redis.version>0.7.2</embedded.redis.version>
+        <sendgrid.version>4.0.1</sendgrid.version>
     </properties>
 
     <dependencies>
@@ -141,6 +142,15 @@
             <groupId>com.eatthepath</groupId>
             <artifactId>java-otp</artifactId>
             <version>${otp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>${sendgrid.version}</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.redisson</groupId>-->
