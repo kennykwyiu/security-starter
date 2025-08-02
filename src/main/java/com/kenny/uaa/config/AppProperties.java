@@ -49,4 +49,16 @@ public class AppProperties {
         private String appId;
         private String appKey;
     }
+
+    @Getter
+    @Setter
+    @Valid
+    private EmailProvider emailProvider = new EmailProvider();
+
+    @Getter
+    @Setter
+    public static class EmailProvider {
+        private String name;
+        private String apiKey;
+    }
 }
