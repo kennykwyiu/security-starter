@@ -18,6 +18,17 @@ spring:
     use-code-as-default-message: false
   datasource:
     initialization-mode: embedded
+  mail:
+    host: ${SMTP_HOST}
+    password: ${SMTP_PASSWORD}
+    port: ${SMTP_PORT}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    username: ${SMTP_USERNAME}
   profiles:
     active: ${SPRING_ACTIVE_PROFILE:dev}
 
@@ -27,4 +38,6 @@ kenny:
     refresh-token-expire-time: 2592000000
   sms-provider:
     name: ali
-
+  email-provider:
+    api-key: ${EMAIL_API_KEY}
+    name: api
