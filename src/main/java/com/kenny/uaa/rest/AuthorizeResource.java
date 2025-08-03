@@ -9,6 +9,7 @@ import com.kenny.uaa.service.UserService;
 import com.kenny.uaa.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,8 +52,22 @@ public class AuthorizeResource {
     }
 
     @PostMapping("/token")
-    public Auth login(@Valid @RequestBody LoginDto loginDto) throws AccessDeniedException {
-        return userService.login(loginDto.getUsername(), loginDto.getPassword());
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) throws AccessDeniedException {
+        return userService.findOptionalByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword())
+                .map(user -> {
+                    // Step 1: Upgrade password encoding if needed
+
+                    // Step 2: Check if user is enabled
+
+                    // Step 3: Check if user account is non-locked
+
+                    // Step 4: Check if user account is non-expired
+
+                    // Step 5: If user does not use MFA, return login result
+
+                    // Step 6: If user uses MFA, cache user and return 401 with MFA challenge
+                })
+
     }
 
     @PostMapping("/token/refresh")
