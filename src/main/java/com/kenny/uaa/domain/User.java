@@ -42,6 +42,15 @@ public class User implements UserDetails, Serializable {
     private boolean accountNonLocked;
     @Column(name = "credentials_non_expired", nullable = false)
     private boolean credentialsNonExpired;
+
+    @Builder.Default
+    @Column(name = "using_mfa", nullable = false)
+    private boolean usingMfa = false;
+
+    @JsonIgnore
+    @Column(name = "mfa_key", nullable = false)
+    private String mfaKey;
+
     @ManyToMany
     @Fetch(FetchMode.JOIN)
     @JoinTable(name = "mooc_users_roles",
