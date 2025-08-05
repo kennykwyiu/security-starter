@@ -23,6 +23,7 @@ public class UserCacheService {
 
     public String cacheUser(User user) {
         String mfaId = cryptoUtil.randomAlphanumeric(12);
+        log.debug("Generated mfaId: {}", mfaId);
         RMapCache<String, User> cache = redisson.getMapCache(Constants.CACHE_MFA);
         if (!cache.containsKey(mfaId)) {
             cache.put(mfaId, user, totpUtil.getTimeStepInLong(), TimeUnit.SECONDS);
@@ -31,8 +32,10 @@ public class UserCacheService {
     }
 
     public Optional<User> retrieveUser(String mfaId) {
+        log.debug("Input parameter mfaId: {}", mfaId);
         RMapCache<String, User> cache = redisson.getMapCache(Constants.CACHE_MFA);
         if (cache.containsKey(mfaId)) {
+            log.debug("Found mfaId {}", mfaId);
             return Optional.of(cache.get(mfaId));
         }
         return Optional.empty();
