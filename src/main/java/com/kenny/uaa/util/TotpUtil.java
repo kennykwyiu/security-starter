@@ -72,4 +72,8 @@ public class TotpUtil {
     public Duration getTimeStep() {
         return totp.getTimeStep();
     }
+
+    public long getTimeStepInLong() {
+        return TIME_STEP;
+    }
 }
