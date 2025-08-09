@@ -5,11 +5,14 @@ import com.kenny.uaa.domain.User;
 import com.kenny.uaa.domain.dto.LoginDto;
 import com.kenny.uaa.domain.dto.UserDto;
 import com.kenny.uaa.exception.DuplicateProblem;
+import com.kenny.uaa.service.UserCacheService;
 import com.kenny.uaa.service.UserService;
 import com.kenny.uaa.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,6 +24,7 @@ import java.nio.file.AccessDeniedException;
 public class AuthorizeResource {
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final UserCacheService userCacheService;
 
     @PostMapping("/register")
     public UserDto register(@Valid @RequestBody UserDto userDto) {
@@ -64,9 +68,17 @@ public class AuthorizeResource {
                     // Step 4: Check if user account is non-expired
 
                     // Step 5: If user does not use MFA, return login result
+                    if (!user.isUsingMfa()) {
+                        return ResponseEntity.ok().body(userService.login(loginDto.getUsername(), loginDto.getPassword()));
+                    }
 
                     // Step 6: If user uses MFA, cache user and return 401 with MFA challenge
+                    String mfaId = userCacheService.cacheUser(user);
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                            .header("x-Authenticate", "mfa", "realm=" + mfaId)
+                            .build();
                 })
+                .orElseThrow(() -> new BadCredentialsException("username or password invalid"));
 
     }
 
